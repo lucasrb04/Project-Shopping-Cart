@@ -23,13 +23,15 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   event.target.remove();
+  const parentItem = document.querySelector('ol');
+  localStorage.setItem('list', parentItem.innerHTML);
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  // li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
@@ -42,11 +44,12 @@ function createCustomElement(element, className, innerText) {
 
 async function shoppedItem(event) {
   const sku = getSkuFromProductItem(event.target.parentNode);
-  // const sku = items.target.parentNode.firstChild.innerText; Solução feita junto com Emerson
+  // const sku = event.target.parentNode.firstChild.innerText; // Solução feita junto com Emerson
   const item = await getItemById(sku);
   const parentItem = document.querySelector('ol');
   const result = createCartItemElement(item);
   parentItem.appendChild(result);
+  localStorage.setItem('list', parentItem.innerHTML);
 }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
@@ -72,4 +75,7 @@ async function renderComputers() {
 
 window.onload = async function onload() { 
   renderComputers();
+  const parentItem = document.querySelector('ol');
+  parentItem.innerHTML = localStorage.getItem('list');
+  parentItem.addEventListener('click', cartItemClickListener);
 };
