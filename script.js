@@ -4,6 +4,21 @@ async function getComputers() {
     return jsonItems.results;
 }
 
+function wait() {
+  const cart = document.querySelector('.cart__title');
+  const loadingText = document.createElement('p');
+  loadingText.className = 'loading';
+  loadingText.innerText = 'Carregando';
+  cart.appendChild(loadingText);
+}
+
+async function removeWait() {
+  setTimeout(() => {
+    const loadingText = document.querySelector('.loading');
+    loadingText.remove(); 
+  }, 1500);
+}
+
 async function getItemById(id) {
   const apiResponse = await fetch(`https://api.mercadolibre.com/items/${id}`);
   const jsonItems = await apiResponse.json();
@@ -78,7 +93,9 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 }
 
 async function renderComputers() {
+  wait();
   const computers = await getComputers();
+  removeWait();
   const itemsSection = document.querySelector('.items');
   computers.forEach((computer) => { 
     itemsSection.appendChild(createProductItemElement(computer));
